@@ -1,0 +1,133 @@
+---
+title: Combining polygenic risk scores with gene-based burden scores
+
+
+author:
+  - name: E. Hassanin
+    affil: 1,2
+    
+  - name: R. Aldisi
+    affil: 1
+    
+  - name: P. May
+    affil: 2,3
+    
+  - name: P. Krawitz
+    affil: 1
+    
+  - name: DR Bobbili 
+    affil: 2
+    
+  - name: C. Maj
+    affil: 1
+  
+affiliation:
+  - num: 1
+    address: Institute of Genomic Statistics and Bioinformatics, University of Bonn, Bonn, Germany
+    
+  - num: 2
+    address: MeGeno S.A, Esch-sur-Alzette, Luxembourg
+    
+  - num: 3
+    address: Bioinformatics Core, Luxembourg Centre for Systems Biomedicine (LCSB), Belvaux, Luxembourg
+
+column_numbers: 3
+logoright_name: "Figures/megeno.png"
+logoleft_name: "Figures/unilogo.png"
+output: 
+  posterdown::posterdown_html:
+    self_contained: false
+bibliography: ref.bib
+csl: nature.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library("pacman")
+
+pacman::p_load(tidyverse,knitr)
+```
+
+# Introduction
+
+1. In complex traits ”common diseases”, how a large number of genes associated variants contributes to influence development of the disease over a life course?.
+
+2. Polygenic risk score (PRS) uses weighted sum of trait-associated alleles (**common variant**) to calculate an overall risk score of getting a particular common disease.
+
+3. Gene-level scoring is based on the combined effects of multiple variants weighted according to functional annotations and variant frequency and deleteriousness [@Ashton2018] (**rare variants**).
+
+## Objectives
+ In this study, we explores whether the integration of PRS and Gene-level scoring can improve risk prediction or no.
+
+# Methods
+
+## **Data Source**
+This study was performed using genotypic and phenotypic data from the Ukbiobank (UKB). 
+
+## **Study participants**
+We studied three common diseases: Breast Cancer, CAD, and type 2 diabetes. Diagnosis of the three disease was based self-reported, ICD-9, ICD-10, and OPCS-4 codes [@khera2019].
+
+## **Statistical model**
+we developed a combined model to integrated PRS, and gene-based score.
+
+```{r figure1, out.width='75%'}
+knitr::include_graphics('Figures/prs-genepy.png')
+```
+
+# Results
+
+<p>&nbsp;</p>
+
+For each disease, we calculated PRS based on previously reported GWAS, and gene-based scores based on trait-associated genes.  
+
+<p>&nbsp;</p>
+
+```{r table1, out.width='90%', fig.align='center',fig.cap= "PRS derivation and gene-based scores for three common, complex diseases."}
+tribble(
+~Disease, ~`Discovery GWAS (n)`,~`Discovery genes (n)`,~`Prevalence in training (cases/controls)`,
+ ~`Prevalence in testing (cases/controls)`,
+
+"Breast Cancer","",920, "779/16751", "259/5583",
+
+"CAD","",74,"861/31537","315/10483",
+ 
+"Type 2 diabetes","",53,"717/31681","238/10560",
+
+) %>% 
+  kable(align = "lcccc" ,caption = "PRS derivation and gene-based scores for three common, complex diseases.")
+```
+
+<p>&nbsp;</p>
+
+The derived genetic risk models were assessed on the basis of their ability to classify individuals diagnosed with breast cancer, CAD, and diabetes in the UKB testing dataset.  
+
+```{r figure2, fig.show = "hold", out.width = "50%",out.height = "100%" ,fig.align = "default" , fig.cap= "Breast cancer models. On left hand side, AUC of PRS, gene-based score (gps), and combined model was determined using a logistic regression model adjusted for age, sex, and the first four principal components of ancestry. On right hand side, AUC of PRS, gene-based score (gps) adjusted only for the first four principal components of ancestry. " }
+knitr::include_graphics('Figures/bc.png')
+knitr::include_graphics('Figures/bc2.png')
+```
+
+
+```{r figure3,  fig.show = "hold", out.width = "50%", out.height = "100%", fig.align = "default" , fig.cap='Coronary artery disease (CAD) models'}
+knitr::include_graphics('Figures/cad.png')
+knitr::include_graphics('Figures/cad2.png')
+```
+
+```{r figure4, fig.show = "hold", out.width = "50%", fig.align = "default" , fig.cap=' Type 2 diabetes models' }
+knitr::include_graphics('Figures/diabetes.png')
+knitr::include_graphics('Figures/diabetes2.png')
+```
+
+# Conclusion
+
+1.The genetic contributions to human traits can be associated with both common variant and rare variants
+
+2. A better evaluation of the genetic susceptibility can be obtained with a combined evaluation of PRS and gene-based burden scores
+
+
+# Next Steps
+
+This study was performed on ~50,000 samples that have both genotyping and exome sequence data in the UKB. Next step is to reproduce the same work on recently releases 200,000 exome-sequence sample in the UKB
+
+
+# References
+
