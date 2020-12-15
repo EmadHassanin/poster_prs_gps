@@ -135,7 +135,7 @@ knitr::include_graphics('Figures/diabetes2.png')
 This study was performed on ~50,000 samples that have both genotyping and exome sequence data in the UKB. Next step is to reproduce the same work on recently releases 200,000 exome-sequence sample in the UKB.
 
 # Find out more
-* https://github.com/EmadHassanin/combining_prd_gps
+* https://github.com/EmadHassanin/combining_prs_gps
 * [Institute of Genomic Statistics and Bioinformatics, University](https://www.igsb.uni-bonn.de/en/team-1).
 * [MeGeno S.A, Company](https://www.megeno.com/).
 
