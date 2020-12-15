@@ -319,7 +319,7 @@ font-size: 20pt;
 <div id="statistical-model" class="section level2">
 <h2><strong>Statistical model</strong></h2>
 <p>we developed a combined model to integrated PRS, and gene-based score.</p>
-<p><img src="Figures/prs-genepy.png" width="75%" /></p>
+<p><img src="Figures/prs-genepy.png" width="75%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="results" class="section level1">
@@ -345,37 +345,39 @@ font-size: 20pt;
 <tbody>
 <tr class="odd">
 <td align="left">Breast Cancer</td>
-<td align="center"></td>
+<td align="center">228,951</td>
 <td align="center">920</td>
-<td align="center">779/16751</td>
-<td align="center">259/5583</td>
+<td align="center">779/16,751</td>
+<td align="center">259/5,583</td>
 </tr>
 <tr class="even">
 <td align="left">CAD</td>
-<td align="center"></td>
+<td align="center">184,305</td>
 <td align="center">74</td>
-<td align="center">861/31537</td>
-<td align="center">315/10483</td>
+<td align="center">861/31,537</td>
+<td align="center">315/10,483</td>
 </tr>
 <tr class="odd">
 <td align="left">Type 2 diabetes</td>
-<td align="center"></td>
+<td align="center">159,208</td>
 <td align="center">53</td>
-<td align="center">717/31681</td>
-<td align="center">238/10560</td>
+<td align="center">717/31,681</td>
+<td align="center">238/10,560</td>
 </tr>
 </tbody>
 </table>
 <p>
  
 </p>
-<p>The derived genetic risk models were assessed on the basis of their ability to classify individuals diagnosed with breast cancer, CAD, and diabetes in the UKB testing dataset.</p>
+<p>Here, we analyzed genotyping and exome data from UK Biobank to perform a combined evaluation of polygenic risk based on common variants and the burden of a rare deleterious mutation in the coding region for three diseases. The derived genetic risk models were assessed on the basis of their ability to classify individuals diagnosed with breast cancer, CAD, and diabetes in the UKB testing dataset.</p>
+<p>For breast cancer, the derived genetic risk models from both components reached an AUC of 0.738, whereas from only a polygenic risk score was 0.687, and from only an exome score was 0.728. (Figure <a href="#fig:figure2">1</a>)</p>
 <div class="figure"><span id="fig:figure2"></span>
 <img src="Figures/bc.png" alt="Breast cancer models. On left hand side, AUC of PRS, gene-based score (gps), and combined model was determined using a logistic regression model adjusted for age, sex, and the first four principal components of ancestry. On right hand side, AUC of PRS, gene-based score (gps) adjusted only for the first four principal components of ancestry. " width="50%" height="100%" /><img src="Figures/bc2.png" alt="Breast cancer models. On left hand side, AUC of PRS, gene-based score (gps), and combined model was determined using a logistic regression model adjusted for age, sex, and the first four principal components of ancestry. On right hand side, AUC of PRS, gene-based score (gps) adjusted only for the first four principal components of ancestry. " width="50%" height="100%" />
 <p class="caption">
 Figure 1: Breast cancer models. On left hand side, AUC of PRS, gene-based score (gps), and combined model was determined using a logistic regression model adjusted for age, sex, and the first four principal components of ancestry. On right hand side, AUC of PRS, gene-based score (gps) adjusted only for the first four principal components of ancestry.
 </p>
 </div>
+<p>For coronary artery disease, models reached AUC of 0.818, 0.806, and 0.790, while for type 2 diabetes AUC reached 0.750, 0.711, and 0.692 for the combined model, only polygenic risk score, and only exome score, respectively. That suggests that both components associate in an independent way to the phenotypes.(Figure <a href="#fig:figure3">2</a>, <a href="#fig:figure4">3</a>)</p>
 <div class="figure"><span id="fig:figure3"></span>
 <img src="Figures/cad.png" alt="Coronary artery disease (CAD) models" width="50%" height="100%" /><img src="Figures/cad2.png" alt="Coronary artery disease (CAD) models" width="50%" height="100%" />
 <p class="caption">
@@ -391,14 +393,22 @@ Figure 3:  Type 2 diabetes models
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>1.The genetic contributions to human traits can be associated with both common variant and rare variants</p>
+<p>1.The genetic contributions to human traits can be associated with both common variant and rare variants.</p>
 <ol start="2" style="list-style-type: decimal">
-<li>A better evaluation of the genetic susceptibility can be obtained with a combined evaluation of PRS and gene-based burden scores</li>
+<li>A better evaluation of the genetic susceptibility can be obtained with a combined evaluation of PRS and gene-based burden scores.</li>
 </ol>
 </div>
 <div id="next-steps" class="section level1">
 <h1>Next Steps</h1>
-<p>This study was performed on ~50,000 samples that have both genotyping and exome sequence data in the UKB. Next step is to reproduce the same work on recently releases 200,000 exome-sequence sample in the UKB</p>
+<p>This study was performed on ~50,000 samples that have both genotyping and exome sequence data in the UKB. Next step is to reproduce the same work on recently releases 200,000 exome-sequence sample in the UKB.</p>
+</div>
+<div id="find-out-more" class="section level1">
+<h1>Find out more</h1>
+<ul>
+<li><a href="https://github.com/EmadHassanin/combining_prd_gps" class="uri">https://github.com/EmadHassanin/combining_prd_gps</a></li>
+<li><a href="https://www.igsb.uni-bonn.de/en/team-1">Institute of Genomic Statistics and Bioinformatics, University</a>.</li>
+<li><a href="https://www.megeno.com/">MeGeno S.A, Company</a>.</li>
+</ul>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
