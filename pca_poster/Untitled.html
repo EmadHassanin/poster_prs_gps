@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Untitled.knit</title>
+
+
+
+
+
+
+
+<!--
+Font-awesome icons ie github or twitter
+-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/brands.css" integrity="sha384-n9+6/aSqa9lBidZMRCQHTHKJscPq6NW4pCQBiMmHdUCvPN8ZOg2zJJTkC7WIezWv" crossorigin="anonymous">
+
+<!--
+Google fonts api stuff
+-->
+<link href='https://fonts.googleapis.com/css?family=Special Elite' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Rasa' rel='stylesheet'>
+
+<!--
+Here are the required style attributes for css to make this poster work :)
+-->
+<style>
+@page {
+size: 36in 48in;
+margin: 0;
+padding: 0;
+}
+body {
+margin: 0px;
+padding: 0px;
+width: 36in;
+height: 48in;
+text-align: justify;
+font-size: 45px;
+line-height: 1.05;
+}
+/* RMarkdown Class Styles */
+/* center align leaflet map,
+from https://stackoverflow.com/questions/52112119/center-leaflet-in-a-rmarkdown-document */
+.html-widget {
+margin: auto;
+position: sticky;
+margin-top: 2cm;
+margin-bottom: 2cm;
+}
+.leaflet.html-widget.html-widget-static-bound.leaflet-container.leaflet-touch.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom {
+position: sticky;
+width: 100%;
+}
+pre.sourceCode.r {
+background-color: #dddddd40;
+border-radius: 4mm;
+padding: 4mm;
+width: 75%;
+margin: auto;
+margin-top: 1em;
+margin-bottom: 1em;
+/* align-items: center; */
+}
+code.sourceCode.r{
+background-color: transparent;
+font-size: 20pt;
+border-radius: 2mm;
+}
+code {
+font-size: 25pt;
+font-family: monospace;
+background-color: #00808024;
+color: #0b4545;
+padding: 1.2mm;
+line-height: 1;
+border-radius: 2mm;
+}
+caption {
+margin-bottom: 10px;
+font-size: 20pt;
+font-style: italic;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #00808020;
+}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+  border-spacing: 0;
+  font-size: 40%;
+  border-style: none;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-right: 1em;
+  padding-left: 1em;
+  line-height: 1em;
+}
+table {
+  margin: auto;
+}
+th {
+  padding-left: 5mm;
+  padding-right: 5mm;
+}
+.caption {
+font-size: 20pt;
+font-style: italic;
+padding-top: 0;
+}
+.references {
+font-size: 20px;
+line-height: 90%;
+}
+/* Create three unequal columns that floats next to each other */
+.column {
+float: left;
+padding: 0px;
+}
+.outer {
+width: 36in;
+height: calc(48in *  (1 - 0.2 - 0.1 - 0.01) );
+-webkit-column-count: 2; /* Chrome, Safari, Opera */
+-moz-column-count: 2; /* Firefox */
+column-count: 2;
+-webkit-column-fill: auto;
+-moz-column-fill: auto;
+column-fill: auto;
+column-gap: 0;
+padding-left: 0cm;
+padding-right: 0cm;
+/* -webkit-column-rule-width: 50%;
+-moz-column-rule-width: 50%;
+column-rule-width: 50%; */
+-webkit-column-rule-style: none;
+-moz-column-rule-style: none;
+column-rule-style: none;
+-webkit-column-rule-color: black;
+-moz-column-rule-color: black;
+column-rule-color: black;
+background-color: #ffffff;
+font-family: Rasa;
+margin-top: calc(48in *  0.2 );
+padding-top: 1em;
+padding-bottom: 1em;
+}
+span.citation {
+  color: #008080;
+  font-weight: bold;
+}
+a {
+text-decoration: none;
+color: #008080;
+}
+#title {
+font-size: 125pt;
+text-align: left;
+margin: 0;
+line-height: 98%;
+border-bottom: 0;
+font-weight: normal;
+background: 0;
+}
+#author {
+color: #0b4545;
+margin: 0;
+line-height: 85%;
+font-size: 1.5em;
+}
+#affiliation {
+padding-top: 0.1em;
+color: ;
+font-style: italic;
+font-size: 25px;
+margin: 0;
+}
+sup {
+color: #cc0000;
+}
+.affiliation sup {
+font-size: 20px;
+}
+.author {
+text-align: left;
+}
+.author sup {
+font-size: 30px;
+}
+.author_extra {
+color: #008080;
+margin: 0;
+line-height: 85%;
+font-size: 35px;
+text-align: left;
+}
+.outer h1, h2, h3, h4, h5, h6 {
+text-align: center;
+margin: 0;
+font-weight: bold;
+}
+.section h1 {
+  text-align:center;
+  padding-bottom:5px;
+  background:
+    linear-gradient(
+      to left,
+      #ffffff 1%,
+      #ffffff 20%,
+      #0b454575 33%,
+      #0b4545 50%,
+      #0b454575 66%,
+      #ffffff 80%,
+      #ffffff 99%
+    )
+    left
+    bottom
+    #ffffff
+    no-repeat;
+  background-size:100% 5px ;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.outer h2 {
+text-align: center;
+}
+.outer p, .level2 {
+color: #000000;
+}
+.outer ol {
+padding-left: 8%;
+padding-right: 8%;
+text-align: left;
+}
+.main {
+width: 36in;
+height: calc(48in * 0.2);
+position: absolute;
+background-color: #0b4545;
+color: #ffffff90;
+font-family: Special Elite;
+background-image: linear-gradient(#0b4545 50%,#008080);
+}
+.main strong {
+color: #ffffff;
+}
+.main strong > sup {
+color: #ffffff;
+}
+.main sup {
+color: #ffffff90;
+}
+#main-img-left {
+width: 10%;
+left: 0.5in;
+bottom: 0.2in;
+position: absolute;
+}
+#main-img-center {
+width: 10%;
+left: calc(36in * 0.45);
+bottom: 0.5in;
+position: absolute;
+}
+#main-img-right {
+width: 10%;
+right: 0.5in;
+bottom: 0.2in;
+position: absolute;
+}
+.main p {
+font-size: 150px;
+font-family: Special Elite;
+text-align: center;
+margin: 0;
+position: absolute;
+top: 50%;
+-ms-transform: translateY(-50%);
+transform: translateY(-50%);
+margin-left: 1em;
+}
+.fab {
+color: #00000030;
+font-size: 25px;
+}
+.twitter, i {
+color: #00000030;
+font-size: 35px;
+text-decoration: none;
+}
+a.email {
+text-decoration: none;
+color: #00000030;
+font-size: 35px;
+}
+.envelope {
+color: #00000030;
+font-size: 5px;
+text-decoration: none;
+}
+.poster_wrap {
+width: 36in;
+height: 48in;
+padding: 0cm;
+}
+.main_bottom {
+width: 36in;
+height: calc(48in * 0.1);
+margin-top: calc(48in * (1 - 0.1));
+position: absolute;
+background-color: #0b4545;
+background-image: linear-gradient(#008080 10%, #0b4545);
+}
+.section {
+  padding-left: 10mm;
+  padding-right: 10mm;
+}
+span > #tab:mytable {
+  font-weight: bold;
+}
+.orcid img {
+  width: 3%;
+}
+.emphasis {
+  background-color: #008080;
+  color: #ffffff;
+  border: solid #0b2045 3mm;
+  margin: 1em;
+  padding-left: 0;
+  padding-right: 0;
+}
+.emphasis h1 {
+  font-weight: bold;
+  background: none;
+  background-color: #0b2045;
+  padding-bottom: 5mm;
+  padding-top: 1mm;
+  margin-top: -1mm;
+  margin-right: -1mm;
+  margin-left: -1mm;
+}
+.emphasis blockquote {
+  border: 0;
+}
+.emphasis ol {
+  padding: 0;
+  padding-left: 8%;
+  font-size: 100%;
+  font-weight: bold;
+}
+.emphasis p {
+  color: #ffffff;
+}
+</style>
+</head>
+<body>
+
+
+<div class="poster_wrap">
+
+<div class="column outer">
+<div class="section">
+
+<h3 id="author" class="author">
+
+<strong>Emadeldin Hassanin</strong><sup> 1</sup><br>
+<a class="twitter" href="https://mobile.twitter.com/emad_hassanin"><i class="fab fa-twitter"></i>&nbsp;&nbsp;@emad_hassanin</a><br>
+
+<a class='envelope'><i class="fas fa-envelope"></i></a> <a href="mailto:hassanin@uni-bonn.de" class="email">hassanin@uni-bonn.de</a> <br>
+     </h3>
+
+<h5 id="author_extra", class="author_extra">
+ R. Aldisi<sup>1</sup>
+ DR Bobbili<sup>2</sup>
+ P. May<sup>2</sup>
+ P. Krawitz<sup>1</sup>
+ C. Maj<sup>1</sup>
+</h5>
+
+
+<p id="affiliation" class="affiliation">
+<sup>1</sup> Institute of Genomic Statistics and Bioinformatics, University of Bonn, Bonn, Germany<br> <sup>2</sup> Bioinformatics Core, Luxembourg Centre for Systems Biomedicine (LCSB), Belvaux, Luxembourg
+</p>
+</div>
+
+<!-- poster_height: "59in" -->
+<!-- poster_width: "35in" -->
+<style>
+#main-img-left {
+ width: 30%;
+ vertical-align: middle;
+}
+#main-img-center {
+ width: 10%;
+}
+#main-img-right {
+ width: 25%;
+ vertical-align: middle;
+}
+</style>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<ol style="list-style-type: decimal">
+<li><p>Polygenic risk score (PRS) has been known to influence development of the prostate cancer over a life course.</p></li>
+<li><p>PRS have recently been shown to have relative risks that depend on age, and genetic relative risks decrease with increasing age.</p></li>
+<li><p>A recent study assessed the interplay of polygenic risk, rare pathogenic variants, and family history<span class="citation"><sup><a href="#ref-pmid34906469" role="doc-biblioref">1</a></sup></span>.</p></li>
+</ol>
+<div id="objectives" class="section level2">
+<h2>Objectives</h2>
+<p>We aimed to comprehensively assess the role of polygenic risk score (PRS):</p>
+<ul>
+<li><p>in the early-onset prostate cancer (PC) vs late-onset</p></li>
+<li><p>in the absence or presence of a family history of PC (FH)</p></li>
+<li><p>in the absence or presence of rare pathogenic variants (PV, across 5 PC susceptibility genes - HOXB13, BRCA2, ATM, CHEK2, BRCA1).</p></li>
+</ul>
+</div>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<!-- ![Caption for the picture.](/Users/emadeldin.hassanin/Projects/poster_prs_gps/pca_poster/Figures/fig1.png) -->
+<!-- I will show here how to include poster elements that may be useful, such as an equation using mathjax: -->
+<!-- To reference a citation you can add your `.bib` file to the working directory and name it in the YAML metadata or generate an automated one as done here, then you only need to reference the label value in the `.bib` file. For example this package is built on top of the wonderful {pagedown} package and I will cite it at the end of this sentance using this in the rmd `[@R-pagedown]` [@R-pagedown]. -->
+<!-- To get a better understanding of how to include features like these please refer to the {posterdown} [wiki](https://github.com/posterdown/wiki). -->
+<!-- **_Now on to the results!_** -->
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
+<img src="Untitled_files/figure-html/unnamed-chunk-4-1.png" alt="Boxplot of prostate cancer (PC) PRS for early-onset versus late-onset PC. PRS distribution across all PC cases (a), PC cases with PC family history (b), and PC cases with PV carrier (c)" width="100%" />
+<p class="caption">
+Figure 1: Boxplot of prostate cancer (PC) PRS for early-onset versus late-onset PC. PRS distribution across all PC cases (a), PC cases with PC family history (b), and PC cases with PV carrier (c)
+</p>
+</div>
+<!-- Here you may have some figures to show off, bellow I have made a scatterplot with the infamous Iris dataset and I can even reference to the figure automatically like this, `Figure <a href="#fig:irisfigure"><strong>??</strong></a>`, Figure <a href="#fig:irisfigure"><strong>??</strong></a>. -->
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-5"></span>
+<img src="Untitled_files/figure-html/unnamed-chunk-5-1.png" alt="Risk estimates for early-onset versus late-onset CRC associated with PC PRS. Individuals stratified according to presence of family history." width="100%" />
+<p class="caption">
+Figure 2: Risk estimates for early-onset versus late-onset CRC associated with PC PRS. Individuals stratified according to presence of family history.
+</p>
+</div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:myprettycode"></span>
+<img src="Untitled_files/figure-html/myprettycode-1.png" alt="Absolute risk estimates of being diagnosed with PC across the age stratum by PRS percentile. Individuals stratified according to presence of family history." width="100%" />
+<p class="caption">
+Figure 3: Absolute risk estimates of being diagnosed with PC across the age stratum by PRS percentile. Individuals stratified according to presence of family history.
+</p>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body" line-spacing="2">
+<div id="ref-pmid34906469" class="csl-entry">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Hassanin, E. <em>et al.</em> <span class="nocase"><span>B</span>reast and prostate cancer risk: <span>T</span>he interplay of polygenic risk, rare pathogenic germline variants, and family history</span>. <em>Genet Med</em> <strong>24,</strong> 576–585 (2022).</div>
+</div>
+</div>
+</div>
+
+</div>
+<div class="main">
+<p><div class="left">
+<strong>P19.045.D</strong> <br> <strong>Early-onset prostate cancer</strong> : Interplay of PRS &amp; family history and rare pathogenic variants
+</div></p>
+</div>
+<div class="main_bottom">
+<img id="main-img-left" src=Figures/IGSBlogo.png>
+<img id="main-img-center" src=https://raw.githubusercontent.com/brentthorne/posterdown/master/images/qr-code-black.png>
+<img id="main-img-right" src=Figures/unibonn_logo2.png>
+</div>
+</div>
+
+
+
+</body>
+</html>

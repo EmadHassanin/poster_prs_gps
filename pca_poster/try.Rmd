@@ -1,0 +1,98 @@
+---
+title: 
+author:
+- name: '**Emadeldin Hassanin**'
+  affil: 1
+  main: yes
+  twitter: emad_hassanin
+  email: hassanin@uni-bonn.de
+- name: R. Aldisi
+  affil: 1
+- name: DR Bobbili
+  affil: 2
+- name: P. May
+  affil: 2
+- name: P. Krawitz
+  affil: 1
+- name: C. Maj
+  affil: 1
+main_topsize: 0.2
+column_numbers: 2
+output:
+  posterdown::posterdown_betterport:
+    self_contained: no
+    pandoc_args: --mathjax
+    number_sections: no
+affiliation:
+- num: 1
+  address: Institute of Genomic Statistics and Bioinformatics, University of Bonn,
+    Bonn, Germany
+- num: 2
+  address: Bioinformatics Core, Luxembourg Centre for Systems Biomedicine (LCSB),
+    Belvaux, Luxembourg
+main_findings: '**P19.045.D**  <br> **Early-onset prostate cancer** : Interplay of PRS & family history and rare pathogenic variants'
+author_textsize:	"1.5em"
+affiliation_textsize:	"35px"
+geometry: "left=3cm,right=3cm,top=2cm,bottom=2cm"
+logoleft_name: Figures/IGSBlogo.png
+logoright_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/qr-code-black.png
+main_bottomsize: 0.1
+bibliography: ref.bib
+link-citations: yes
+---
+
+<!-- poster_height: "59in" -->
+
+<!-- poster_width: "35in" -->
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      tidy = FALSE,
+                      message = FALSE,
+                      fig.align = 'center',
+                      out.width = "100%")
+options(knitr.table.format = "html") 
+```
+
+```{=html}
+<style>
+#main-img-left {
+ width: 30%;
+ vertical-align: middle;
+}
+#main-img-center {
+ width: 10%;
+}
+#main-img-right {
+ width: 10%;
+ vertical-align: middle;
+}
+</style>
+```
+# Introduction
+
+1.  Polygenic risk score (PRS) has been known to influence development of the prostate cancer over a life course.
+
+2.  PRS have recently been shown to have relative risks that depend on age, and genetic relative risks decrease with increasing age.
+
+3.  A recent study assessed the interplay of polygenic risk, rare pathogenic variants, and family history [@pmid34906469].
+
+```{r, include=FALSE}
+knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
+```
+
+## Objectives
+
+We aimed to comprehensively assess the role of polygenic risk score (PRS):
+
+-   in the early-onset prostate cancer (PC) vs late-onset
+
+-   in the absence or presence of a family history of PC (FH)
+
+-   in the absence or presence of rare pathogenic variants (PV, across 5 PC susceptibility genes - HOXB13, BRCA2, ATM, CHEK2, BRCA1).
+
+# Methods
+
+
+# References

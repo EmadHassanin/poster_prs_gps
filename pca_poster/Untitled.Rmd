@@ -1,0 +1,521 @@
+---
+title: 
+author:
+- name: '**Emadeldin Hassanin**'
+  affil: 1
+  main: yes
+  twitter: emad_hassanin
+  email: hassanin@uni-bonn.de
+- name: R. Aldisi
+  affil: 1
+- name: DR Bobbili
+  affil: 2
+- name: P. May
+  affil: 2
+- name: P. Krawitz
+  affil: 1
+- name: C. Maj
+  affil: 1
+main_topsize: 0.2
+column_numbers: 2
+output:
+  posterdown::posterdown_betterport:
+    self_contained: no
+    pandoc_args: --mathjax
+    number_sections: no
+affiliation:
+- num: 1
+  address: Institute of Genomic Statistics and Bioinformatics, University of Bonn,
+    Bonn, Germany
+- num: 2
+  address: Bioinformatics Core, Luxembourg Centre for Systems Biomedicine (LCSB),
+    Belvaux, Luxembourg
+main_findings: '<div class="left"> **P19.045.D**  <br> **Early-onset prostate cancer** : Interplay of PRS & family history and rare pathogenic variants</div>'
+author_textsize:	"1.5em"
+main_textsize": "170px"
+geometry: "left=3cm,right=3cm,top=2cm,bottom=2cm"
+logoleft_name: Figures/IGSBlogo.png
+logoright_name: Figures/unibonn_logo2.png 
+logocenter_name: https&#58;//raw.githubusercontent.com/brentthorne/posterdown/master/images/qr-code-black.png
+main_bottomsize: 0.1
+bibliography: ref.bib
+csl: nature.csl
+link-citations: yes
+---
+
+<!-- poster_height: "59in" -->
+
+<!-- poster_width: "35in" -->
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      tidy = FALSE,
+                      message = FALSE,
+                      fig.align = 'center',
+                      out.width = "100%")
+options(knitr.table.format = "html") 
+```
+
+```{=html}
+<style>
+#main-img-left {
+ width: 30%;
+ vertical-align: middle;
+}
+#main-img-center {
+ width: 10%;
+}
+#main-img-right {
+ width: 25%;
+ vertical-align: middle;
+}
+</style>
+```
+# Introduction
+
+1.  Polygenic risk score (PRS) has been known to influence development of the prostate cancer over a life course.
+
+2.  PRS have recently been shown to have relative risks that depend on age, and genetic relative risks decrease with increasing age.
+
+3.  A recent study assessed the interplay of polygenic risk, rare pathogenic variants, and family history [@pmid34906469].
+
+```{r, include=FALSE}
+knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
+```
+
+## Objectives
+
+We aimed to comprehensively assess the role of polygenic risk score (PRS):
+
+-   in the early-onset prostate cancer (PC) vs late-onset
+
+-   in the absence or presence of a family history of PC (FH)
+
+-   in the absence or presence of rare pathogenic variants (PV, across 5 PC susceptibility genes - HOXB13, BRCA2, ATM, CHEK2, BRCA1).
+
+# Methods
+
+```{r}
+knitr::opts_chunk$set(echo = FALSE)
+library("pacman")
+
+pacman::p_load(tidyverse,knitr,data.table,ggpubr,broom)
+## loading libraries
+
+fread("/Users/emadeldin.hassanin/Downloads/age_onset_PCa/data/pc_covariates.txt") -> pc
+fread("/Users/emadeldin.hassanin/Downloads/age_onset_PCa/data/pc_variants_prs.txt") -> pc_car
+
+## processing
+
+pc_for_model <-   pc %>% 
+   mutate(ntile = ntile(scoreresid,10)) %>%
+   mutate(ntile = factor(ntile),
+          ntile= fct_recode(ntile,
+                            "0-20%"    = "1",
+                            "0-20%"   = "2" ,
+                            "20-80%"    = "3" ,
+                            "20-80%"   = "4" ,
+                            "20-80%"   = "5" ,
+                            "20-80%"   = "6",
+                            "20-80%"   = "7" ,
+                            "20-80%"   = "8" ,
+                            "80-100%"   = "9" ,
+                            "80-100%"     = "10"),
+            age_strat = case_when(
+                age2 <= 52 ~ "early onset",
+                age2 > 52 ~ "late onset"
+             ),
+          pheno_age_strat = case_when(
+             pheno == 0 ~ "Controls",
+             pheno == 1 & age2 <= 55 ~ "Early onset PCa",
+             pheno == 1 & age2 > 55 ~ "Late onset PCa"
+          ),
+          pheno_age_strat = factor(pheno_age_strat,
+                           levels = c("Controls","Late onset PCa","Early onset PCa")),
+          ill = factor(ill),
+          ill= fct_recode(ill, 
+                          "nonHistory" = "0",
+                          "History"     = "1"),
+          history_ntile = factor(paste(ill,ntile,sep = " & ")))
+
+
+
+
+
+pc_for_model_car <-   pc_car %>% 
+   mutate(ntile = factor(ntile),
+          ntile= fct_recode(ntile,
+                            "0-20%"    = "1",
+                            "0-20%"   = "2" ,
+                            "20-80%"    = "3" ,
+                            "20-80%"   = "4" ,
+                            "20-80%"   = "5" ,
+                            "20-80%"   = "6",
+                            "20-80%"   = "7" ,
+                            "20-80%"   = "8" ,
+                            "80-100%"   = "9" ,
+                            "80-100%"     = "10"),
+          age_strat = case_when(
+             age2 <= 55~ "early onset",
+             age2 > 55 ~ "late onset"
+          ),
+          pheno_age_strat = case_when(
+             pheno == 0 ~ "Controls",
+             pheno == 1 & age2 <= 60 ~ "Early onset PCa",
+             pheno == 1 & age2 > 60 ~ "Late onset PCa"
+          ),
+          pheno_age_strat = factor(pheno_age_strat,
+                                   levels = c("Controls","Late onset PCa","Early onset PCa")),
+          ill = factor(ill),
+          carrier = factor(carrier),
+          carrier= fct_recode(carrier, 
+                              "nonCarrier" = "0",
+                              "Carrier"     = "1"),
+          ill= fct_recode(ill, 
+                          "nonHistory" = "0",
+                          "History"     = "1"),
+          history_ntile = factor(paste(ill,ntile,sep = " & ")))
+
+pc_for_model$history_ntile<- relevel(pc_for_model$history_ntile, ref = "nonHistory & 20-80%")
+
+
+```
+
+<!-- ![Caption for the picture.](/Users/emadeldin.hassanin/Projects/poster_prs_gps/pca_poster/Figures/fig1.png) -->
+
+<!-- I will show here how to include poster elements that may be useful, such as an equation using mathjax: -->
+
+<!-- To reference a citation you can add your `.bib` file to the working directory and name it in the YAML metadata or generate an automated one as done here, then you only need to reference the label value in the `.bib` file. For example this package is built on top of the wonderful {pagedown} package and I will cite it at the end of this sentance using this in the rmd `[@R-pagedown]` [@R-pagedown]. -->
+
+<!-- To get a better understanding of how to include features like these please refer to the {posterdown} [wiki](https://github.com/posterdown/wiki). -->
+
+<!-- **_Now on to the results!_** -->
+
+# Results
+
+```{r , fig.height = 3,fig.cap="Boxplot of prostate cancer (PC) PRS for early-onset versus late-onset PC. PRS distribution across all PC cases (a), PC cases with PC family history (b), and PC cases with PV carrier (c)"}
+## Visualiation ----
+   
+
+
+pc_for_model %>% 
+   ggdensity(x = "scoreresid", alpha = 0.3, 
+             color = "pheno_age_strat", palette = "lancet",
+             legend.title=" ",font.legend = c(13, "plain", "black")) +
+  ggtitle("PC")  -> p1
+
+
+
+pc_for_model %>% 
+   filter(ill == "nonHistory") %>% 
+   ggdensity(x = "scoreresid", alpha = 0.3, 
+             color = "pheno_age_strat", palette = "lancet",legend.title=" ")  -> p2
+
+
+
+pc_for_model %>% 
+   filter(ill == "History") %>% 
+   ggdensity(x = "scoreresid", alpha = 0.3, 
+             color = "pheno_age_strat", palette = "lancet") +
+  ggtitle("PCa + family history")  -> p3
+
+
+pc_for_model_car %>%  
+   filter(carrier == "Carrier") %>% 
+   ggdensity(x = "scoreresid", alpha = 0.3, 
+             color = "pheno_age_strat", palette = "lancet") +
+  ggtitle("PCa + PV carrier")   -> p4
+   
+
+
+pc_for_model %>% 
+   ggboxplot( x = "pheno_age_strat", y = "scoreresid",xlab = " ",x.text=F, 
+          color = "pheno_age_strat", palette = "lancet",outlier.shape=NA,legend.title=" ")+ 
+   stat_compare_means(label.y =0.3,
+                      method = "t.test",label="p.signif",
+                      ref.group = "Controls") +
+   rremove("x.text") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+
+  ggtitle("PC")->p5
+
+pc_for_model %>% 
+   filter(ill== "nonHistory") %>% 
+   ggboxplot( x = "pheno_age_strat", y = "scoreresid",xlab = " ",
+              color = "pheno_age_strat", palette = "lancet",outlier.shape=NA,legend = "none")+ 
+   stat_compare_means( label.y =0.25,
+                      method = "t.test",label="p.signif",
+                      ref.group = "Controls") +
+   rremove("x.text") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())->p6
+
+pc_for_model %>% 
+   filter(ill== "History") %>% 
+   ggboxplot( x = "pheno_age_strat", y = "scoreresid",xlab = " ",
+              color = "pheno_age_strat", palette = "lancet",outlier.shape=NA,legend = "none")+ 
+   stat_compare_means(label.y =0.25,
+                      method = "t.test",label="p.signif",
+                      ref.group = "Controls") +
+   rremove("x.text")+
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank()) +
+  ggtitle("PC + family history")->p7
+
+
+pc_for_model_car %>% 
+   filter(carrier== "Carrier") %>% 
+   ggboxplot( x = "pheno_age_strat", y = "scoreresid",xlab = " ",
+              color = "pheno_age_strat", palette = "lancet",outlier.shape=NA,legend = "none")+ 
+   stat_compare_means(label.y =0.25,
+                      method = "t.test",label="p.signif",
+                      ref.group = "Controls") +
+   rremove("x.text") +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+
+  ggtitle("PC + PV carrier")->p8
+
+
+pc_for_model %>% 
+   ggline( x = "pheno_age_strat", y = "scoreresid",add = "mean_se", xlab = " " ,ylab = "Polygenic score" ,
+              color = "pheno_age_strat", palette = "lancet",ylim= c(0,0.075),legend = "none")+ 
+   stat_compare_means(label.y = c(0.05, 0.07),
+                      method = "t.test",label="p.format",
+                      ref.group = "Controls")+
+   rremove("x.text") ->p9
+
+pc_for_model %>% 
+   filter(ill== "nonHistory") %>% 
+   ggline( x = "pheno_age_strat", y = "scoreresid",add = "mean_se",xlab = " ",ylab = "Polygenic score" ,
+              color = "pheno_age_strat", palette = "lancet",ylim= c(0,0.075),legend = "none")+ 
+   stat_compare_means(label.y = c(0.05, 0.07),
+                      method = "t.test",label="p.format",
+                      ref.group = "Controls") +
+   rremove("x.text")->p10
+
+pc_for_model %>% 
+   filter(ill== "History") %>% 
+   ggline( x = "pheno_age_strat", y = "scoreresid",add = "mean_se",xlab = " ",ylab = "Polygenic score" ,
+                color = "pheno_age_strat", palette = "lancet",ylim= c(0,0.075),legend = "none")+ 
+   stat_compare_means(label.y = c(0.05, 0.07),
+                      method = "t.test",label="p.format",
+                      ref.group = "Controls") +
+   rremove("x.text")->p11
+
+pc_for_model_car %>% 
+   filter(carrier== "Carrier") %>% 
+   ggline( x = "pheno_age_strat", y = "scoreresid",add = "mean_se",xlab = " ",ylab = "Polygenic score" ,
+              color = "pheno_age_strat", palette = "lancet",ylim= c(0,.12),legend = "none")+ 
+   stat_compare_means(label.y = c(0.07, 0.1),
+                      method = "t.test",label="p.format",
+                      ref.group = "Controls") +
+   rremove("x.text")->p12
+
+# png("/Users/emadeldin.hassanin/Projects/poster_prs_gps/pca_poster/Figures/fig1.png", width = 465, height = 225, units='mm', res = 300)
+
+ggarrange( p5, p7 , p8,
+           labels = "auto", 
+           ncol = 3, nrow = 1,  common.legend = TRUE,legend = "bottom" )
+
+# dev.off()
+```
+
+<!-- Here you may have some figures to show off, bellow I have made a scatterplot with the infamous Iris dataset and I can even reference to the figure automatically like this, `Figure @ref(fig:irisfigure)`, Figure @ref(fig:irisfigure). -->
+
+```{r, fig.height = 6, fig.width = 8,fig.cap="Risk estimates for early-onset versus late-onset CRC associated with PC PRS. Individuals stratified according to presence of family history."}
+# prs+age
+
+age_fh_prs <- function(fh,age_onset){
+pc_for_model_or <- pc %>% 
+      mutate(
+         scoreresid = as.numeric(scoreresid),
+         age_strat = case_when(
+         age2 <= 52 ~ "early onset",
+         age2 > 52 ~ "late onset"
+      )) %>%
+
+   filter(age_strat == age_onset) %>% 
+      mutate(ntile = ntile(scoreresid,10)) %>%
+      mutate(ntile = factor(ntile),
+             ntile= fct_recode(ntile,
+                               "10%"    = "1",
+                               "20%"   = "2" ,
+                               "30%"    = "3" ,
+                               "40%"   = "4" ,
+                               "50%"   = "5" ,
+                               "60%"   = "6",
+                               "70%"   = "7" ,
+                               "80%"   = "8" ,
+                               "90%"   = "9" ,
+                               "100%"     = "10"),
+             ill=factor(ill),
+             ill= fct_recode(ill, 
+                             "nonHistory" = "0",
+                             "History"     = "1")) %>% 
+   filter(ill == fh)
+
+   
+pc_for_model_or$ntile<- relevel(pc_for_model_or$ntile, ref = "10%")
+
+glm(pheno ~ scoreresid  + age2 +
+       genetic_principal_components_f22009_0_1+
+       genetic_principal_components_f22009_0_2+
+       genetic_principal_components_f22009_0_3+
+       genetic_principal_components_f22009_0_4 
+    , data = pc_for_model_or, family=binomial()) -> model_pc
+
+pc_for_model_or %>% 
+   group_by(ntile) %>% 
+   mutate(scoreresid = mean(scoreresid)) %>% 
+   ungroup %>% 
+   mutate(age2 = mean(age2),
+          genetic_principal_components_f22009_0_1= mean(genetic_principal_components_f22009_0_1),
+          genetic_principal_components_f22009_0_2= mean(genetic_principal_components_f22009_0_2),
+          genetic_principal_components_f22009_0_3= mean(genetic_principal_components_f22009_0_3),
+          genetic_principal_components_f22009_0_4= mean(genetic_principal_components_f22009_0_4)) -> new_pc
+
+
+pred_pc <- predict(model_pc, new_pc,  type = "link", se.fit = TRUE)
+
+critval <- 1.96 ## approx 95% CI
+upr <- pred_pc$fit + (critval * pred_pc$se.fit)
+lwr <- pred_pc$fit - (critval * pred_pc$se.fit)
+fit <- pred_pc$fit
+
+
+fit2 <- model_pc$family$linkinv(fit)
+upr2 <- model_pc$family$linkinv(upr)
+lwr2 <- model_pc$family$linkinv(lwr)
+# fam <- family(model_prs4)
+# ilink <- fam$linkinv
+# 
+new_pc <- mutate(new_pc,
+                          fit_link  = fit2,
+                          upr = upr2,
+                          lwr = lwr2 )
+
+
+new_pc %>% 
+   group_by(ntile) %>% 
+   summarise(pred_or = fit_link/new_pc %>%  filter(ntile == "10%") %>%
+                distinct(fit_link) %>% pull,
+             upr = upr/new_pc %>%  filter(ntile == "10%") %>%
+                distinct(upr) %>% pull,
+             lwr = lwr/new_pc %>%  filter(ntile == "10%") %>%
+                distinct(lwr) %>% pull
+   ) %>% 
+   distinct() %>% 
+   mutate(History= fh,age=age_onset)-> prova_final
+   
+}
+
+age_fh_prs("History","early onset")  %>% 
+   rbind(age_fh_prs("History","late onset") ) %>% 
+   rbind(age_fh_prs("nonHistory","early onset") ) %>% 
+   rbind(age_fh_prs("nonHistory","late onset") ) -> hist_age
+
+
+hist_age %>% 
+   arrange(ntile,desc(pred_or)) %>% 
+   group_by(ntile,age) %>%
+   mutate(Diff = round(abs(pred_or - lag(pred_or)),1)) %>%
+  mutate(History= factor(History,levels = c("nonHistory","History"))) %>% 
+   ggplot(aes(y=ntile, x=pred_or ,  color=age,shape=History,
+              group= paste(age,History))) +
+   geom_point(size=4,alpha=5,position="dodge") +
+   geom_line(position="dodge", linetype="dotted") +
+   geom_segment(position="dodge",aes(x=pred_or,   xend=pred_or+Diff, 
+                                      y=ntile, 
+                                      yend=ntile)) +
+   geom_label(aes(label=Diff, x=( pred_or +pred_or+ Diff)/2,y=ntile),
+              nudge_y = 0.4, nudge_x = .05, label.size=0.2) +
+  guides(color=guide_legend(override.aes=list(fill=NA))) +
+ 
+   # geom_errorbarh(aes(xmin=lwr, xmax=upr, width = .2),
+   #               size=0.5,
+   #               width=0,position=position_dodge(0.4)) +
+   #scale_x_continuous(trans='log2') +
+   #facet_wrap(~History,ncol=1) +
+   geom_vline(xintercept = 1, linetype="dotted", color = "grey50", size=1) +
+   theme_pubr(legend = "right") +
+   labs(y="Polygenic score category",x="Odds ratio for PC") +
+   theme(legend.text=element_text(size=15),
+         # legend.title = element_blank(),
+         legend.title = element_text(size=15),
+         axis.line = element_line(size=0.9),
+         axis.title   = element_text(size=17),
+         axis.text = element_text(size=17),
+         axis.ticks = element_line(size=1),
+         axis.ticks.length=unit(.25, "cm"),
+         axis.title.y = element_text(margin = margin(t = 10, r = 10, b = 10, l = 10)),
+         axis.title.x = element_text(margin = margin(t = 10, r = 0, b =10, l = 0)),
+         legend.key.size = unit(2, 'lines'),
+         panel.border = element_rect(color = "Black",
+                                     fill = NA,
+                                     size=1.5)) -> p
+
+
+set_palette(p,palette = "lancet")
+
+
+
+```
+
+```{r myprettycode, fig.cap='Absolute risk estimates of being diagnosed with PC across the age stratum by PRS percentile. Individuals stratified according to presence of family history.'}
+
+surv_data <- pc_for_model %>% 
+   mutate(censor = if_else(pheno == 1 & age2 <= 70, 1, 0 )) 
+# %>% 
+#    filter(gene !="APC")
+
+surv_object <-Surv(time = surv_data$age2, event = surv_data$censor)
+
+fit.coxph_12 <- coxph(surv_object  ~ history_ntile + 
+
+                        genetic_principal_components_f22009_0_1
+                     + genetic_principal_components_f22009_0_2
+                     + genetic_principal_components_f22009_0_3
+                     + genetic_principal_components_f22009_0_4,
+                     data = surv_data)
+
+
+curve_1 <- surv_adjustedcurves(fit.coxph_12 , data = surv_data,
+                             variable  = "history_ntile")
+
+
+curve_1 %>% 
+   # filter(variable != "nonHeterozygote_Low" & variable != "nonHeterozygote_High") %>% 
+   separate(variable,c("history","PRS"),sep=" & ") %>%
+   mutate(comm_inc = 1 - surv ) %>% 
+   # group_by(history,PRS) %>%  summarise(max(comm_inc))
+   ggplot(aes(time, comm_inc,color= PRS)) +
+   geom_line(size=1) + 
+   scale_x_continuous( limit=c(40,70),breaks = c(40,50,60,70))+
+   scale_y_continuous(limits = c(0, 0.6), breaks = seq(0, 0.6, by = 0.2)) +
+   scale_linetype_manual(values = c("solid","dotdash","dotted")) +
+   theme_pubr(legend = c(0.25, 0.7)) +
+  facet_wrap("history") +
+   theme(legend.text=element_text(size=17),
+         legend.title = element_text(size=17),
+         axis.line = element_line(size=0.9),
+         axis.title   = element_text(size=17),
+         axis.text = element_text(size=17),
+         axis.ticks = element_line(size=1),
+         axis.ticks.length=unit(.25, "cm"),
+         axis.title.y = element_text(margin = margin(t = 10, r = 10, b = 10, l = 10)),
+         axis.title.x = element_text(margin = margin(t = 10, r = 0, b =10, l = 0)),
+         legend.key.size = unit(1.5, 'lines'),
+         panel.border = element_rect(color = "Black",
+                                     fill = NA,
+                                     size=1.5)) +
+   labs(y = "Cumulative incidence of PC" , x = "Age (years)")
+
+
+```
+
+# References
